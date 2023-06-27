@@ -1,4 +1,11 @@
 {% extends 'base.html' %} {% block content%}
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+  {{msg}}
+</div>
+{% endif %}
+  
 <h1>welcome to our site please sign up to continue</h1>
 <form action="{% url 'sign_up' %}" method="POST">
   {% csrf_token %}

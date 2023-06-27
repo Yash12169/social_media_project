@@ -1,4 +1,44 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h2>you are in index.html</h2>
+  {% if request.user.is_authenticated %}
+    <form action="{% url 'create_post' %}" method="POST">
+      {% csrf_token %}
+      <label for="caption">Enter your updates here!</label><br />
+      <textarea
+        name="caption"
+        id="caption"
+        cols="30"
+        rows="10"
+        placeholder="Enter your caption"
+        style="width: 100%"
+      ></textarea>
+      <br />
+      <button type="submit" class="btn btn-outline-primary">Post</button>
+    </form>
+
+    {% for post in post_list %}
+      <div class="card" style="width: 18rem">
+        <img
+          src="https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c291cmNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+          class="card-img-top"
+          alt="..."
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ post.caption }}</h5>
+          <p class="card-text">{{ post.user.username }}</p>
+          
+          {% if post.user.id != request.user.id %}
+            <form action="{% url 'like_post' post.id %}" method = 'POST'>
+                {% csrf_token %}
+                <button type="button" class="btn btn-outline-dark">Like   </button>
+            </form>
+          {% endif %}
+            
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning" role="alert">You need to be logged in!</div>
+  {% endif %}
 {% endblock %}
